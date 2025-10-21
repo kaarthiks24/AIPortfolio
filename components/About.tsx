@@ -22,6 +22,7 @@ interface SkillNode {
 const About = () => {
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null)
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null)
+  const [activeCategory, setActiveCategory] = useState<string>('all')
   const skillsRef = useRef(null)
   const timelineRef = useRef(null)
   const isSkillsInView = useInView(skillsRef, { once: false, amount: 0.3 })
@@ -162,7 +163,7 @@ const About = () => {
               >
                 <motion.div
                   className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-accent-primary"
-                  initial={{ scale: 0 }}
+                  initial={{ scale: 0, boxShadow: '0 0 0px rgba(10, 132, 255, 0.5)' }}
                   whileInView={{ scale: [0, 1.5, 1] }}
                   viewport={{ once: false }}
                   transition={{ delay: index * 0.15 + 0.3, duration: 0.5 }}
@@ -171,9 +172,11 @@ const About = () => {
                       '0 0 0px rgba(10, 132, 255, 0.5)',
                       '0 0 20px rgba(10, 132, 255, 0.8)',
                       '0 0 0px rgba(10, 132, 255, 0.5)',
-                    ]
+                    ],
                   }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                  style={{
+                    transition: 'box-shadow 2s ease-in-out infinite'
+                  }}
                 />
                 <motion.div
                   className="glass-morphism p-6 rounded-2xl hover:shadow-card-hover transition-all duration-300 border-subtle"
@@ -204,166 +207,170 @@ const About = () => {
           </div>
         </div>
 
-        {/* Technical Skills - Modern Interactive Layout */}
+        {/* Technical Skills - Compact Interactive Pills */}
         <div ref={skillsRef}>
           <motion.h3
             initial={{ opacity: 0, x: -50 }}
             animate={isSkillsInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
             transition={{ duration: 0.6 }}
-            className="text-3xl font-semibold mb-12 text-light-primary"
+            className="text-3xl font-semibold mb-8 text-light-primary"
           >
             Technical Skills
           </motion.h3>
 
-          {/* Interactive Skill Cards with Proficiency Bars */}
-          <div className="space-y-12">
-            {Object.entries(skillsByCategory).map(([category, categorySkills], categoryIndex) => (
-              <motion.div
+          {/* Category Filter Tabs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isSkillsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex flex-wrap gap-3 mb-8"
+          >
+            {['all', 'ai', 'backend', 'cloud', 'tools'].map((category) => (
+              <motion.button
                 key={category}
-                initial={{ opacity: 0, y: 80, scale: 0.95 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: false, amount: 0.2 }}
-                transition={{
-                  delay: categoryIndex * 0.2,
-                  duration: 0.8,
-                  ease: [0.16, 1, 0.3, 1]
-                }}
-                className="relative"
+                onClick={() => setActiveCategory(category)}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className={`px-5 py-2.5 rounded-full font-medium text-sm transition-all duration-300 ${
+                  activeCategory === category
+                    ? 'bg-accent-primary text-white shadow-lg shadow-accent-primary/50'
+                    : 'glass-morphism text-accent-secondary hover:text-light-primary border border-accent/30'
+                }`}
               >
-                {/* Category Header */}
+                {category === 'all' ? 'All Skills' : categoryInfo[category as keyof typeof categoryInfo]?.title.split(' &')[0] || category}
+              </motion.button>
+            ))}
+          </motion.div>
+
+          {/* Compact Skills Pills */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={isSkillsInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex flex-wrap gap-3"
+          >
+            {skills
+              .filter((skill) => activeCategory === 'all' || skill.category === activeCategory)
+              .map((skill, index) => (
                 <motion.div
-                  className="mb-6 flex items-center gap-4"
-                  whileHover={{ x: 10 }}
-                  transition={{ duration: 0.3 }}
+                  key={skill.id}
+                  initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                  transition={{
+                    delay: index * 0.03,
+                    duration: 0.4,
+                    ease: [0.16, 1, 0.3, 1]
+                  }}
+                  whileHover={{
+                    scale: 1.1,
+                    y: -5,
+                    boxShadow: `0 10px 30px ${skill.color}60`
+                  }}
+                  onHoverStart={() => setHoveredSkill(skill.id)}
+                  onHoverEnd={() => setHoveredSkill(null)}
+                  onClick={() => setSelectedSkill(selectedSkill === skill.id ? null : skill.id)}
+                  className="relative cursor-pointer group"
                 >
+                  {/* Skill Pill */}
                   <div
-                    className="w-1 h-8 rounded-full"
+                    className="px-5 py-2.5 rounded-full glass-morphism border-2 transition-all duration-300 flex items-center gap-2"
                     style={{
-                      backgroundColor: categorySkills[0]?.color || '#0A84FF',
-                      boxShadow: `0 0 20px ${categorySkills[0]?.color}80`
+                      borderColor: hoveredSkill === skill.id || selectedSkill === skill.id ? skill.color : `${skill.color}40`,
+                      backgroundColor: selectedSkill === skill.id ? `${skill.color}20` : undefined
                     }}
-                  />
-                  <h4 className="text-2xl font-bold text-light-primary">
-                    {categoryInfo[category as keyof typeof categoryInfo].title}
-                  </h4>
-                </motion.div>
-
-                <p className="text-accent-secondary mb-6 ml-8">
-                  {categoryInfo[category as keyof typeof categoryInfo].description}
-                </p>
-
-                {/* Skills Grid with Progress Bars */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {categorySkills.map((skill, skillIndex) => (
+                  >
+                    {/* Proficiency Indicator Dot */}
                     <motion.div
-                      key={skill.id}
-                      initial={{ opacity: 0, x: -50, rotateY: -20 }}
-                      whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-                      viewport={{ once: false, amount: 0.5 }}
-                      transition={{
-                        delay: categoryIndex * 0.2 + skillIndex * 0.05,
-                        duration: 0.6,
-                        ease: [0.16, 1, 0.3, 1]
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: skill.color }}
+                      animate={{
+                        scale: hoveredSkill === skill.id ? [1, 1.4, 1] : 1,
+                        boxShadow: hoveredSkill === skill.id
+                          ? [`0 0 0px ${skill.color}`, `0 0 12px ${skill.color}`, `0 0 0px ${skill.color}`]
+                          : `0 0 0px ${skill.color}`
                       }}
-                      whileHover={{
-                        scale: 1.05,
-                        y: -8,
-                        rotateY: 5,
-                        boxShadow: `0 20px 40px ${skill.color}40`
-                      }}
-                      onHoverStart={() => setHoveredSkill(skill.id)}
-                      onHoverEnd={() => setHoveredSkill(null)}
-                      className="glass-morphism rounded-xl p-5 border-2 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                      transition={{ duration: 0.8, repeat: hoveredSkill === skill.id ? Infinity : 0 }}
+                    />
+
+                    {/* Skill Name */}
+                    <span
+                      className="font-medium text-sm transition-colors duration-300"
                       style={{
-                        borderColor: hoveredSkill === skill.id ? skill.color : `${skill.color}30`,
+                        color: hoveredSkill === skill.id || selectedSkill === skill.id ? skill.color : '#FFFFFF',
+                        fontSize: `${0.75 + skill.level * 0.05}rem` // Slightly larger for higher proficiency
                       }}
                     >
-                      {/* Animated Background Glow */}
-                      <motion.div
-                        className="absolute inset-0 opacity-0"
-                        animate={{
-                          opacity: hoveredSkill === skill.id ? 0.1 : 0
-                        }}
-                        style={{
-                          background: `radial-gradient(circle at center, ${skill.color}, transparent 70%)`
-                        }}
-                      />
+                      {skill.label}
+                    </span>
 
-                      <div className="relative z-10">
-                        {/* Skill Icon/Dot */}
+                    {/* Proficiency Level Stars (visible on hover) */}
+                    <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ml-1">
+                      {[...Array(skill.level)].map((_, i) => (
                         <motion.div
-                          className="w-3 h-3 rounded-full mb-3"
+                          key={i}
+                          initial={{ scale: 0 }}
+                          animate={{ scale: hoveredSkill === skill.id ? 1 : 0 }}
+                          transition={{ delay: i * 0.05 }}
+                          className="w-1 h-1 rounded-full"
                           style={{ backgroundColor: skill.color }}
-                          animate={{
-                            scale: hoveredSkill === skill.id ? [1, 1.3, 1] : 1,
-                            boxShadow: hoveredSkill === skill.id
-                              ? [`0 0 0px ${skill.color}`, `0 0 20px ${skill.color}`, `0 0 0px ${skill.color}`]
-                              : `0 0 0px ${skill.color}`
-                          }}
-                          transition={{ duration: 0.6, repeat: hoveredSkill === skill.id ? Infinity : 0 }}
                         />
+                      ))}
+                    </div>
+                  </div>
 
-                        {/* Skill Name */}
-                        <h5
-                          className="font-semibold text-lg mb-3 transition-colors duration-300"
-                          style={{
-                            color: hoveredSkill === skill.id ? skill.color : '#FFFFFF'
-                          }}
-                        >
-                          {skill.label}
-                        </h5>
-
-                        {/* Proficiency Bar */}
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-xs text-accent-secondary">
-                            <span>Proficiency</span>
-                            <span>{skill.level * 20}%</span>
-                          </div>
-                          <div className="h-2 bg-dark-elevated rounded-full overflow-hidden">
-                            <motion.div
-                              className="h-full rounded-full"
-                              initial={{ width: 0 }}
-                              whileInView={{ width: `${skill.level * 20}%` }}
-                              viewport={{ once: false }}
-                              transition={{
-                                delay: categoryIndex * 0.2 + skillIndex * 0.05 + 0.3,
-                                duration: 1,
-                                ease: [0.16, 1, 0.3, 1]
-                              }}
-                              style={{
-                                backgroundColor: skill.color,
-                                boxShadow: `0 0 10px ${skill.color}80`
-                              }}
-                            />
-                          </div>
-
-                          {/* Level Dots */}
-                          <div className="flex gap-1 pt-1">
-                            {[1, 2, 3, 4, 5].map((level) => (
-                              <motion.div
-                                key={level}
-                                className="w-1.5 h-1.5 rounded-full"
-                                initial={{ scale: 0 }}
-                                whileInView={{ scale: 1 }}
-                                viewport={{ once: false }}
-                                transition={{
-                                  delay: categoryIndex * 0.2 + skillIndex * 0.05 + level * 0.05,
-                                  duration: 0.3
-                                }}
-                                style={{
-                                  backgroundColor: level <= skill.level ? skill.color : '#2C2C2E'
-                                }}
-                              />
-                            ))}
-                          </div>
+                  {/* Hover Tooltip */}
+                  {hoveredSkill === skill.id && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-2 bg-dark-card rounded-lg shadow-xl border z-50 whitespace-nowrap"
+                      style={{ borderColor: skill.color }}
+                    >
+                      <div className="text-xs text-accent-secondary mb-1">Proficiency</div>
+                      <div className="flex items-center gap-2">
+                        <div className="h-1.5 w-20 bg-dark-elevated rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{
+                              width: `${skill.level * 20}%`,
+                              backgroundColor: skill.color,
+                              boxShadow: `0 0 8px ${skill.color}`
+                            }}
+                          />
                         </div>
+                        <span className="text-xs font-semibold" style={{ color: skill.color }}>
+                          {skill.level * 20}%
+                        </span>
                       </div>
                     </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                  )}
+                </motion.div>
+              ))}
+          </motion.div>
+
+          {/* Category Legend (Optional - shown when All is selected) */}
+          {activeCategory === 'all' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="mt-8 flex flex-wrap gap-4 text-xs text-accent-secondary"
+            >
+              {Object.entries(categoryInfo).map(([category, info]) => {
+                const color = skills.find(s => s.category === category)?.color || '#0A84FF'
+                return (
+                  <div key={category} className="flex items-center gap-2">
+                    <div
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: color }}
+                    />
+                    <span>{info.title}</span>
+                  </div>
+                )
+              })}
+            </motion.div>
+          )}
         </div>
       </div>
     </section>
