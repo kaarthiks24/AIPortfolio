@@ -30,39 +30,39 @@ const About = () => {
 
   const timeline: TimelineItem[] = [
     {
-      year: '2024',
+      year: 'Jun 2024 - Present',
       title: 'AI/ML Engineer',
       company: 'Synechron Inc, New York',
-      description: 'Built data quality frameworks with Isolation Forest and LLM models. Developed an LLM prompt library framework to streamline generative AI use cases, improving operational efficiency and scalability.',
-      skills: ['LLMs', 'Langchain', 'Data Quality', 'Prompt Engineering']
+      description: 'Built a data quality framework to monitor data at rest and in motion, ensuring traceability and reliability across pipelines. Implemented Isolation Forest and LLM models to optimize validations and automate anomaly detection for enhanced data quality. Developed an LLM prompt library framework to streamline generative AI use cases, improving operational efficiency, scalability and reusability.',
+      skills: ['Data Quality', 'Isolation Forest', 'LLM', 'Prompt Engineering', 'Automation']
     },
     {
-      year: '2023 Q4',
+      year: 'Oct 2023 - Dec 2023',
       title: 'Gen AI Internship',
       company: 'Synechron Inc, New York',
-      description: 'Engineered RAG Langchain chatbot for RiskTech analysis of SEC filings powered by Chroma-DB and WizardLM. Leveraged PgVector and Pandas-AI for Zero Knowledge Proof with 80% accuracy.',
-      skills: ['RAG', 'Chroma-DB', 'PgVector', 'WizardLM', 'Pandas-AI']
+      description: 'Engineered a Retrieval Augmented Generation (RAG) Langchain chatbot for RiskTech analysis of SEC 10K and 10Q filings, powered by Chroma-DB and WizardLM. Leveraged PgVector and harnessed the power of Pandas-AI to drive the Zero Knowledge Proof obfuscating the PII-data with 80% accuracy.',
+      skills: ['RAG', 'Langchain', 'Chroma-DB', 'WizardLM', 'PgVector', 'Pandas-AI']
     },
     {
-      year: '2023 Q2-Q3',
+      year: 'Jun 2023 - Sep 2023',
       title: 'Data Science / Gen AI Internship',
       company: 'Synechron Inc, New York',
-      description: 'Developed GAN models (Real-ESRGAN, EDSR GAN) for OCR accuracy. Investigated LLMs (GPT, Llama, Falcon) with multi-modal approach increasing efficiency by 33%. Enhanced RAG accuracy by 45% using chunking strategies.',
-      skills: ['GANs', 'OCR', 'LLM Research', 'Embeddings', 'bge-large']
+      description: 'Developed GAN functions focused on Real-ESR GAN and EDSR GAN models, resulting in heightened OCR accuracy. Investigated the capabilities of Large Language Models (LLM) like GPT, Llama, and Falcon, proposed a multi-modal approach increasing the efficiency in handling the data by 33%. Enhanced RAG accuracy by 45% leveraging chunking strategies in various embedding models like bge-large and all-mini-LM.',
+      skills: ['Real-ESRGAN', 'EDSR GAN', 'OCR', 'GPT', 'Llama', 'Falcon', 'bge-large']
     },
     {
-      year: '2024',
+      year: 'May 2024',
       title: 'MS in Computer Science',
-      company: 'Stevens Institute of Technology',
-      description: 'GPA: 3.94/4.0 | Courses: Math Foundation of ML, Knowledge Discovery and Data Mining, Data Structures and Algorithms',
+      company: 'Stevens Institute of Technology, Hoboken, NJ',
+      description: 'GPA: 3.94/4.0 | Relevant courses: Math Foundation of Machine Learning, Knowledge Discovery and Data Mining, Data Structures and Algorithms',
       skills: ['Machine Learning', 'Data Mining', 'Algorithms']
     },
     {
-      year: '2021',
+      year: 'Jan 2021 - Mar 2021',
       title: 'Machine Learning Internship',
-      company: 'Eamvey Technologies, India',
-      description: 'Created sales prediction models using Linear regression and Perceptron, achieving 30% accuracy increase. Deployed on AWS SageMaker.',
-      skills: ['Linear Regression', 'AWS SageMaker', 'Model Deployment']
+      company: 'Eamvey Technologies, Tamil Nadu, India',
+      description: 'Created sales prediction models using Linear regression and Perceptron techniques resulting in a significant 30% increase in accuracy, deploying them on AWS SageMaker for practical application.',
+      skills: ['Linear Regression', 'Perceptron', 'AWS SageMaker', 'Model Deployment']
     }
   ]
 
