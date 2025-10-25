@@ -135,11 +135,11 @@ const Navigation = () => {
       </div>
 
       {/* Scroll progress indicator - Nothing Phone style */}
-      {scrolled && (
+      {scrolled && typeof window !== 'undefined' && (
         <motion.div
           className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-primary to-transparent"
           style={{
-            scaleX: useTransform(scrollProgress, [0, document.body.scrollHeight - window.innerHeight], [0, 1]),
+            scaleX: useTransform(scrollProgress, [0, Math.max(0, document.body.scrollHeight - window.innerHeight)], [0, 1]),
             transformOrigin: "left"
           }}
         />
